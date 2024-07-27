@@ -1,12 +1,12 @@
-from django.db import models
-
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 from materials.services import NULLABLE
 
 
 class User(AbstractUser):
     """Модель пользователя"""
+
     username = None
     email = models.EmailField(unique=True, verbose_name="Почта")
     avatar = models.ImageField(
