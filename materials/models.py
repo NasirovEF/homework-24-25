@@ -12,6 +12,7 @@ class Course(models.Model):
         upload_to="course/images/", verbose_name="Превью", **NULLABLE
     )
     description = models.TextField(verbose_name="Описание курса")
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="course", **NULLABLE)
 
     class Meta:
         verbose_name = "Курс"
@@ -33,6 +34,7 @@ class Lesson(models.Model):
     image = models.ImageField(
         upload_to="lesson/images/", verbose_name="Превью урока", **NULLABLE
     )
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="lesson", **NULLABLE)
 
     class Meta:
         verbose_name = "Урок"
