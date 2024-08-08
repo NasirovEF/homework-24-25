@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from materials.models import Course, Lesson, Payment
+from materials.models import Course, Lesson, Payment, Subscription
 from materials.validators import validate_url
 
 
@@ -33,3 +33,20 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = "__all__"
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    is_active = serializers.SerializerMethodField()
+
+    def get_is_active(self, object):
+        if self.request.user == object.user:
+            return True
+
+    class Meta:
+        model = Subscription
+        fields = [
+            "id",
+            "user",
+            "course",
+            "is_active"
+        ]
