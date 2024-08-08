@@ -20,4 +20,12 @@ class PaymentMethodAdmin(admin.ModelAdmin):
 
 @admin.register(Payment)
 class Payment(admin.ModelAdmin):
-    list_display = ("id", "user", "course", "lesson", "amount", "pay_date", "pay_method")
+    list_display = (
+        "id",
+        "user",
+        "course",
+        "lesson",
+        "amount",
+        "pay_date",
+        "pay_method",
+    )

@@ -12,7 +12,9 @@ class Course(models.Model):
         upload_to="course/images/", verbose_name="Превью", **NULLABLE
     )
     description = models.TextField(verbose_name="Описание курса")
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="course", **NULLABLE)
+    owner = models.ForeignKey(
+        User, on_delete=models.SET_NULL, related_name="course", **NULLABLE
+    )
 
     class Meta:
         verbose_name = "Курс"
@@ -34,7 +36,9 @@ class Lesson(models.Model):
     image = models.ImageField(
         upload_to="lesson/images/", verbose_name="Превью урока", **NULLABLE
     )
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="lesson", **NULLABLE)
+    owner = models.ForeignKey(
+        User, on_delete=models.SET_NULL, related_name="lesson", **NULLABLE
+    )
 
     class Meta:
         verbose_name = "Урок"
@@ -101,11 +105,18 @@ class Payment(models.Model):
 
 class Subscription(models.Model):
     """Модель подписки"""
+
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name="Пользователь", related_name="subscription"
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Пользователь",
+        related_name="subscription",
     )
     course = models.ForeignKey(
-        Course, on_delete=models.CASCADE, verbose_name="Курс", related_name="subscription"
+        Course,
+        on_delete=models.CASCADE,
+        verbose_name="Курс",
+        related_name="subscription",
     )
 
     class Meta:

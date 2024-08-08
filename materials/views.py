@@ -5,7 +5,12 @@ from rest_framework.filters import OrderingFilter
 from materials.models import Course, Lesson, Payment, Subscription
 from materials.pagination import LessonPagination, CoursePagination
 from materials.permissions import IsModerPermission, IsOwnerPermission
-from materials.serializers import CourseSerializer, LessonSerializer, PaymentSerializer, SubscriptionSerializer
+from materials.serializers import (
+    CourseSerializer,
+    LessonSerializer,
+    PaymentSerializer,
+    SubscriptionSerializer,
+)
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
@@ -40,7 +45,10 @@ class LessonList(generics.ListAPIView):
 class LessonRetrieve(generics.RetrieveAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = (IsAuthenticated, IsModerPermission | IsOwnerPermission,)
+    permission_classes = (
+        IsAuthenticated,
+        IsModerPermission | IsOwnerPermission,
+    )
 
 
 class LessonCreate(generics.CreateAPIView):
@@ -55,7 +63,10 @@ class LessonCreate(generics.CreateAPIView):
 class LessonUpdate(generics.UpdateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = (IsAuthenticated, IsModerPermission | IsOwnerPermission,)
+    permission_classes = (
+        IsAuthenticated,
+        IsModerPermission | IsOwnerPermission,
+    )
 
 
 class LessonDestroy(generics.DestroyAPIView):
@@ -68,23 +79,25 @@ class PaymentList(generics.ListAPIView):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filter_fields = ('course', 'lesson', 'pay_method')
-    ordering_fields = ('-pay_date',)
+    filter_fields = ("course", "lesson", "pay_method")
+    ordering_fields = ("-pay_date",)
 
 
 class SubscriptionAPIView(APIView):
     def post(self, request):
         user = request.user
-        course_id = request.data.get('course_id')
+        course_id = request.data.get("course_id")
         course = get_object_or_404(Course, id=course_id)
 
-        subscription, created = Subscription.objects.get_or_create(user=user, course=course)
+        subscription, created = Subscription.objects.get_or_create(
+            user=user, course=course
+        )
         print(subscription)
         if not created:
             subscription.delete()
-            message = 'Subscription removed'
+            message = "Subscription removed"
         else:
-            message = 'Subscription added'
+            message = "Subscription added"
 
         return Response({"message": message}, status=status.HTTP_201_CREATED)
 
@@ -93,4 +106,3 @@ class SubscriptionAPIView(APIView):
         subscriptions = Subscription.objects.filter(user=user)
         serializer = SubscriptionSerializer(subscriptions, many=True)
         return Response(serializer.data)
-

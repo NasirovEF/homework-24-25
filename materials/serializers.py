@@ -9,12 +9,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = [
-            "id",
-            "name",
-            "description",
-            "course",
-        ]
+        fields = ["id", "name", "description", "course", "video_url", "image"]
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -44,9 +39,4 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subscription
-        fields = [
-            "id",
-            "user",
-            "course",
-            "is_active"
-        ]
+        fields = ["id", "user", "course", "is_active"]
