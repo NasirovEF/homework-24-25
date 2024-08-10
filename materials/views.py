@@ -99,7 +99,7 @@ class SubscriptionAPIView(APIView):
         else:
             message = "Subscription added"
 
-        return Response({"message": message}, status=status.HTTP_201_CREATED)
+        return Response({"message": message}, status=status.HTTP_200_OK)
 
     def get(self, request):
         user = request.user

@@ -15,13 +15,17 @@ class LessonSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     lessons_count = serializers.SerializerMethodField()
     lesson = LessonSerializer(many=True)
+    subscribers = serializers.SerializerMethodField()
 
     def get_lessons_count(self, object):
         return object.lesson.count()
 
+    def get_subscribers(self, object):
+        return [sub.user.email for sub in Subscription.objects.filter(course=object)]
+
     class Meta:
         model = Course
-        fields = ["id", "name", "description", "lessons_count", "lesson"]
+        fields = ["id", "name", "description", "lessons_count", "lesson", "subscribes"]
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -31,12 +35,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
-    is_active = serializers.SerializerMethodField()
-
-    def get_is_active(self, object):
-        if self.request.user == object.user:
-            return True
 
     class Meta:
         model = Subscription
-        fields = ["id", "user", "course", "is_active"]
+        fields = ["id", "user", "course"]
