@@ -94,6 +94,8 @@ class Payment(models.Model):
         related_name="payment",
         **NULLABLE,
     )
+    session_id = models.CharField(max_length=200, verbose_name="ID сессии", **NULLABLE)
+    link = models.URLField(max_length=300, verbose_name="Ссылка на оплату", **NULLABLE)
 
     class Meta:
         verbose_name = "Оплата"
