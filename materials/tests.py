@@ -90,7 +90,7 @@ class SubscriptionTestCase(APITestCase):
         self.assertEqual(Subscription.objects.get(user=self.user).user.email, self.user.email)
 
     def test_post_deactivated_sub(self):
-        subscription = Subscription.objects.create(user=self.user, course=self.course)
+        self.subscription = Subscription.objects.create(user=self.user, course=self.course)
         url = reverse("materials:subscription")
         data = {"course_id": self.course.pk}
         response = self.client.post(url, data=data)

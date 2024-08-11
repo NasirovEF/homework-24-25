@@ -16,6 +16,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 
+from materials.services import get_product, get_price, get_session
+
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
@@ -81,6 +83,21 @@ class PaymentList(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filter_fields = ("course", "lesson", "pay_method")
     ordering_fields = ("-pay_date",)
+
+
+class PaymentCreate(generics.CreateAPIView):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+    permission_classes = (IsAuthenticated & ~IsModerPermission,)
+
+    def perform_create(self, serializer):
+        payment = serializer.save(user=self.request.user)
+        product = get_product(payment.course.name if payment.course else payment.lesson.name)
+        price = get_price(payment.amount, product)
+        session_id, link = get_session(price)
+        payment.session_id = session_id
+        payment.link = link
+        payment.save()
 
 
 class SubscriptionAPIView(APIView):

@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "user",
     "materials",
     "django_filters",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
@@ -136,3 +137,5 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
+
+STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")
