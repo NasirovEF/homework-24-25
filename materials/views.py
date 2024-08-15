@@ -17,6 +17,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from materials.services import get_product, get_price, get_session
+from materials.tasks import send_email
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -26,6 +27,14 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def perform_update(self, serializer):
+        host = self.request.get_host()
+        url = f"https//{host}/materials/course/{self.serializer.pk}"
+        recipient_list = serializer.subscriptions.user
+        for recipient in recipient_list:
+            send_email.delay(url, serializer.name, recipient.email)
+        serializer.save()
 
     def get_permissions(self):
         if self.action == "create":
@@ -69,6 +78,14 @@ class LessonUpdate(generics.UpdateAPIView):
         IsAuthenticated,
         IsModerPermission | IsOwnerPermission,
     )
+
+    def perform_update(self, serializer):
+        host = self.request.get_host()
+        url = f"https//{host}/materials/course/{self.serializer.pk}"
+        recipient_list = serializer.course.subscriptions.user
+        for recipient in recipient_list:
+            send_email.delay(url, serializer.course.name, recipient.email)
+        serializer.save()
 
 
 class LessonDestroy(generics.DestroyAPIView):
